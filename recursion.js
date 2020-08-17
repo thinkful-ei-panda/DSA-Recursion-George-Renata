@@ -75,13 +75,96 @@ console.log(factorial(8));
 
 // 8 and 9 - Find a way out of the maze - You have entered a Maze and need to find your way out of it. There are more than one possible paths through the Maze to the single exit point. Write a recursive function that will help you find a possible path though the maze.
 
+let mySmallMaze = [
+  [' ', ' ', ' '],
+  [' ', '*', ' '],
+  [' ', ' ', 'e']
+];
+
+let maze = [
+  [' ', ' ', ' ', '*', ' ', ' ', ' '],
+  ['*', '*', ' ', '*', ' ', '*', ' '],
+  [' ', ' ', ' ', ' ', ' ', ' ', ' '],
+  [' ', '*', '*', '*', '*', '*', ' '],
+  [' ', ' ', ' ', ' ', ' ', ' ', 'e']
+]; 
+//possible exit: RRDDLLDDRRRRRR
+
+const mazeSolving = function(row, column, directions, maze){
+
+  if (maze[row][column] == 'e'){
+    return directions;
+  }
+
+
+  if (column < maze[0].length - 1 && maze[row][column + 1] != ('*')){
+    maze[row][column] = '*';
+    let newColumn = column + 1;
+    let newRow = row;
+    return directions = 'R' + mazeSolving(newRow, newColumn, directions, maze);
+  }  
+  
+  if (row < maze.length - 1 && maze[row  + 1][column] != ('*')){
+    maze[row][column] = '*';
+    let newColumn = column;
+    let newRow = row + 1;
+    return directions = 'D' + mazeSolving(newRow, newColumn, directions, maze);
+  }  
+  
+  if (column > 0 && maze[row][column - 1] != ('*')){
+    maze[row][column] = '*';
+    let newColumn = column - 1;
+    let newRow = row;
+    return directions = 'L' + mazeSolving(newRow, newColumn, directions, maze);
+
+  }
+  
+  if (row > 0 && maze[row - 1][column] != ('*')){
+    maze[row][column] = '*';
+    let newColumn = column;
+    let newRow = row - 1;
+    return directions = 'U' + mazeSolving(newRow, newColumn, directions, maze);
+  }    
+};
 
 
 // 10 - Anagrams - An anagram is any word or phrase that uses the letters of a given ("subject") word or phrase in another, rearranged order. Write a function that creates an anagram list, listing all the rearrangements of a given word. For example, if the user types "east", the program should list all 24 permutations, including "eats", "etas", "teas", and non-words like "tsae".
 
+function anagrams(prefix, input){
+  if(input.length <= 1){
+    let newGram = prefix + input;
+
+    if(!anagramsArr.includes(newGram)){
+      anagramsArr.push(newGram);
+    }
+  }
+  for(let i = 0; i < input.length; i ++){
+    const currentString = input.substring(i, i + 1);
+    const previous = input.substring(0, i);
+    const next = input.substring(i+1);
+
+    anagrams(prefix + currentString, previous + next);
+  }
+}
+
+anagrams('', 'drink');
 
 // 11- Organization Chart - Write a recursive function that prints the following organization chart. Your output should be as shown below with proper indentation to show the hierarchy. You may store the org chart in an object and send that as an input to your program.
 
+const organizeEmployees = function(employees, boss){
+  let orgChart = {};
+  employees
+    .filter(employee => employee.boss === boss) 
+    .forEach(employee => {
+      orgChart[employee.id] = organizeEmployees(employees, employee.id);
+
+    });
+  return orgChart;
+};
+
+let employeesChart = JSON.stringify(organizeEmployees(employees, null));
+
+console.log(employeesChart);
 
 // 12 - Binary Representation - Write a recursive function that prints out the binary representation of a given number. For example, the program should take 3 as an input and print 11 as output, or 25 as an input and print 11001 as an output. Note that the binary representation of 0 should be 0.
 
